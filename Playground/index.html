@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallax Scrolling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .parallax {
+            position: relative;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .layer1 { background-image: url('Asset/500-Days-of-Summer-Cropped copy.jpg'); }
+        .layer2 { background-image: url('Asset/wallpaperflare.com_wallpaper.jpg'); }
+        .layer3 { background-image: url('Asset/WF-Textless-Thumb.jpg'); }
+
+        .content {
+            position: relative;
+            text-align: center;
+            padding: 100px 20px;
+            background: #fff;
+        }
+
+        .title {
+            font-size: 3rem;
+            color: #333;
+            padding: 50px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="parallax layer1"></div>
+    <div class="content">
+        <h1 class="title">Welcome to the Parallax Experience</h1>
+        <p>Scroll down to see the effect in action.</p>
+    </div>
+    <div class="parallax layer2"></div>
+    <div class="content">
+        <h1 class="title">Feel the Depth</h1>
+        <p>Each layer moves at a different speed, creating a 3D effect.</p>
+    </div>
+    <div class="parallax layer3"></div>
+    <div class="content">
+        <h1 class="title">Cinematic and Immersive</h1>
+        <p>Great for storytelling and interactive designs.</p>
+    </div>
+</body>
+</html>
+

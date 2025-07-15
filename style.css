@@ -1,0 +1,808 @@
+/* Reset and basic styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background-color: #000;
+  overflow-x: hidden;
+}
+
+/* --- NAVBAR --- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(34, 34, 34, 0.7); /* Glass effect */
+  backdrop-filter: blur(10px);
+  padding: 15px 40px;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.navbar.scrolled {
+  padding: 10px 30px;
+  background: rgba(20, 20, 20, 0.9); /* Darker when scrolled */
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  position: relative;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  padding: 10px 20px;
+  transition: 0.3s;
+  display: block;
+}
+
+.nav-links a:hover {
+  background: #f39c12;
+  color: black;
+  border-radius: 5px;
+}
+
+/* --- DROPDOWN --- */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background: rgba(34, 34, 34, 0.9);
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-menu li {
+  width: 100%;
+}
+
+.dropdown-menu a {
+  padding: 12px;
+  width: 100%;
+}
+
+/* --- HAMBURGER MENU --- */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* --- FULLSCREEN MOBILE MENU --- */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: 100vh;
+  background: rgba(20, 20, 20, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease-in-out;
+  z-index: 999;
+}
+
+.mobile-menu.active {
+  left: 0;
+}
+
+.mobile-menu .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  text-align: center;
+}
+
+.mobile-menu a {
+  text-decoration: none;
+  color: white;
+  font-size: 24px;
+  padding: 15px;
+  display: block;
+  transition: all 0.3s;
+}
+
+.mobile-menu a:hover {
+  color: #f39c12;
+  transform: scale(1.1);
+}
+
+/* Mobile Dropdown */
+.mobile-dropdown-menu {
+  display: none;
+  padding-left: 20px;
+}
+
+.mobile-dropdown-menu.show {
+  display: block;
+}
+
+.mobile-dropdown a {
+  cursor: pointer;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .nav-links {
+      display: none;
+  }
+
+  .hamburger {
+      display: block;
+  }
+}
+
+/* --- CONTENT SPACER --- */
+.content {
+  margin-top: 100px;
+  text-align: center;
+  padding: 50px;
+}
+
+
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 100vh; /* Full screen height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 4rem 2rem;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* fallback background or image */
+  background: #111;
+  opacity: 0.4;
+  z-index: -2; /* behind everything */
+}
+
+.titles {
+  position: relative;
+  z-index: 2; /* above the video container */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 80%;
+  font-family: Arial, Helvetica, sans-serif
+}
+
+.titles h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.titles h1 span {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-left: 1rem;
+  opacity: 0.8;
+}
+
+/* Full-screen preview container */
+.preview-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* behind the titles but above .hero-bg */
+  overflow: hidden;
+  background: #000; /* fallback background */
+}
+
+/* Crossfade Approach for #previewImage and #previewGif */
+#previewImage,
+#previewGif {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  /* fade+blur transition */
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  filter: blur(0px);
+}
+
+/* The default image is visible by default */
+#previewImage {
+  opacity: 1;
+  z-index: 2;
+}
+
+/* The GIF starts behind, transparent */
+#previewGif {
+  opacity: 0;
+  z-index: 1;
+}
+
+/* Scroll-down arrow */
+.scroll-down {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  font-size: 2rem;
+  cursor: pointer;
+  animation: bounce 2s infinite;
+  z-index: 2;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(10px); }
+  60% { transform: translateY(5px); }
+}
+
+/* Content Section */
+.content {
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  background: #111; 
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background: #000;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.titles h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  /* Add a smooth transition on transform and color */
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* On hover, scale up and change color */
+.titles h1:hover {
+  transform: scale(1.05);
+  color: #ccc;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.titles h1 {
+  transition: color 0.3s ease;
+}
+
+.titles h1:hover {
+  color: #ccc;
+  animation: pulse 1s infinite; /* run the pulse animation forever */
+}
+
+/* Main content wrapper */
+main {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Example text-block styling */
+.text-block {
+  margin-bottom: 3rem;
+  line-height: 1.5;
+}
+
+.text-block h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.text-block h2 em {
+  font-style: italic;
+}
+
+.text-block p {
+  font-size: 1.2rem;
+}
+
+/* Initially hidden elements */
+.reveal-on-scroll {
+  opacity: 0;
+  /* We'll do the movement/scale via a keyframe animation, so no transform here */
+}
+
+/* When triggered, we run a custom keyframe animation */
+.reveal-on-scroll.active {
+  animation: revealUp 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* Custom keyframe: scale up + slide up + fade in */
+@keyframes revealUp {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.85);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+        body {
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        .parallax {
+            height: 100vh;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+        .parallax-1 {
+            background-image: url('Asset/GIF for website/THE QUEENS GAMBIT.gif');
+        }
+        .parallax-2 {
+            background-image: url('Asset/GIF for website/Everything everywhere all at once.gif');
+        }
+        .content {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            background: #111;
+            color: white;
+        }
+
+        .hidden-text {
+          font-size: 1.8em;
+          font-weight: bold;
+          text-align: center;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          max-width: 60%;
+          margin: 0 auto;
+        }
+      .word {
+          opacity: 0.1;
+          transition: opacity 0.5s ease-out;
+          margin: 0 3px;
+      }
+
+      .content-awards {
+        width: 95%;
+        margin: 0 auto;
+    }
+    .section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0;
+        position: relative;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .year {
+        font-size: 24px;
+        font-weight: bold;
+        width: 15%;
+    }
+    .description {
+        font-size: 16px;
+        width: 80%;
+        opacity: 0;
+        transition: opacity 1s ease-out;
+        text-align: right;
+    }
+    .line {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 1px;
+        background-color: white;
+        transition: width 1s ease-out;
+    }
+
+    .spacer {
+      height: 50vh;
+  }
+  .content-awards {
+      margin: 0 auto;
+  }
+  .section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  .year {
+      font-size: 24px;
+      font-weight: bold;
+      width: 15%;
+  }
+  .description {
+      font-size: 16px;
+      width: 80%;
+      opacity: 0;
+      transition: opacity 1s ease-out;
+  }
+  .line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 1px;
+      background-color: white;
+      transition: width 1s ease-out;
+  }
+  .container {
+    display: flex;
+    gap: 20px;
+    margin-top: 100vh; /* Ensures animation starts after scrolling */
+}
+.laurel-section{
+    display: flex;
+    gap: 20px;
+}
+.laurel {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease-in, transform 1s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container-images {
+  position: relative;
+  width: 100vw;
+  height: 180%;
+}
+.image-grid {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.image {
+  position: absolute;
+  width: 30vw;
+  opacity: 0.7;
+  border-radius: 15px;
+}
+.text-overlay {
+  position: relative;
+  z-index: 2;
+  padding: 10vw 5vw;
+  font-size: 3vw;
+  font-weight: bold;
+  line-height: 1.2;
+}
+.text-line {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.text-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.italic {
+  font-style: italic;
+}
+.highlight {
+  color: #ccc;
+}
+.laurel-container {
+  display: flex;
+  justify-content: center;
+  align-items: left;
+  height: 50vh;
+  flex-direction: column;
+  margin-left: 3%;
+}
+.laurel-wrapper {
+  display: flex;
+  gap: 20px;
+  overflow: hidden;
+}
+.laurel {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.laurel.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*Carousel*/
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.logos {
+  overflow: hidden;
+  padding: 30px 0;
+  background: rgb(0, 0, 0);
+  white-space: nowrap;
+  position: relative;
+}
+
+.logos:before,
+.logos:after {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  content: "";
+  z-index: 2;
+}
+
+.logos:before {
+  left: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0), rgb(0, 0, 0));
+}
+
+.logos:after {
+  right: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(0, 0, 0));
+}
+
+.logos:hover .logos-slide {
+  animation-play-state: paused;
+}
+
+.logos-slide {
+  display: inline-block;
+  animation: 35s slide infinite linear;
+}
+
+.logos-slide img {
+  height: 20%;
+  margin: 0 10px;
+  width: 20%;
+  border-radius: 5%;
+}
+
+@keyframes slide-2 {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/*Pre, Current, Post*/
+.stage {
+  position: relative;
+  padding: 100px 50px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-content {
+  max-width: 600px;
+}
+
+.main-content h2 {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.main-content p {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.corner-text {
+  position: absolute;
+  top: 10%;
+  right: 50px;
+  font-style: italic;
+  font-size: 1.5em;
+  opacity: 0.8;
+}
+
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: width 1s linear;
+}
+
+.right-column {
+  font-family: 'Times New Roman', serif;
+  font-size: 1.5em;
+  font-style: italic;
+  max-width: 400px;
+  text-align: right;
+}
+
+.horizontal-divider {
+  border-top: 2px solid white;
+  margin: 20px 0;
+}
+
+.Production-wrapper {
+  background-image: url(Asset/Logos/KPil53.jpg);
+}
+
+/*Footer Card*/
+/* Contact Section */
+.contact-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* Left Side */
+
+.contact-heading {
+  font-size: 2rem;
+  font-weight: bold;
+  max-width: 600px;
+  font-style: italic;
+}
+
+.contact-title {
+  font-size: 5rem;
+  font-weight: bold;
+  line-height: 1.1;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+}
+
+.contact-title:hover {
+  transform: scale(1.05);
+}
+
+.contact-description {
+  font-size: 2rem;
+  margin-top: 15px;
+  max-width: 600px;
+}
+
+.contact-description .italic {
+  font-style: italic;
+}
+
+/* Right Side */
+.footer-card-wrapper {
+  background-color: black;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+}
+
+.contact-links {
+  text-align: right;
+  font-size: 2.5rem;
+  position: relative;
+}
+
+.contact-link {
+  display: block;
+  margin-top: 5px;
+  color: white;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease-in-out;
+}
+
+.contact-link:hover {
+  color: gray;
+}
+
+/* Smooth Text Fade */
+.contact-link span {
+  display: inline-block;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Scroll Animation */
+.hidden {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}

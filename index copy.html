@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrolling Effect</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: white;
+
+        }
+
+        .section {
+            background: url('Asset/Logos/KPil53.jpg') center/cover fixed no-repeat;
+            position: relative;
+            padding: 100px 50px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+        }
+
+        h2 {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+            max-width: 600px;
+        }
+
+        .sub-text {
+            position: absolute;
+            top: 10%;
+            right: 50px;
+            font-style: italic;
+            font-size: 1.5em;
+            opacity: 0.8;
+        }
+
+        .progress-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: white;
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="section">
+        <h2>Briefing, Research and Conceptualization</h2>
+        <p>Communication - my Client is my partner. I start by thoroughly researching your project, its goals, and target audience. Based on the gathered insights, I develop a unique concept and script that reflects your vision.</p>
+        <span class="progress-line"></span>
+        <div class="sub-text">Pre — idea</div>
+    </div>
+
+    <div class="section">
+        <h2>Shooting and Creativity</h2>
+        <p>I meticulously prepare for shoots, ensuring high-quality video footage. I work on capturing compelling shots that engage viewers and convey your message effectively.</p>
+        <span class="progress-line"></span>
+        <div class="sub-text">Production — creation</div>
+    </div>
+
+    <div class="section">
+        <h2>Editing and Realization</h2>
+        <p>At this stage, I creatively piece together all elements to craft captivating videos. Special effects, editing, sound design — I do everything possible to make your video stand out and leave a lasting impression.</p>
+        <span class="progress-line"></span>
+        <div class="sub-text">Post — realization</div>
+    </div>
+
+    <script>
+        document.addEventListener("scroll", () => {
+            let sections = document.querySelectorAll(".section");
+
+            sections.forEach((section) => {
+                let rect = section.getBoundingClientRect();
+                let progressLine = section.querySelector(".progress-line");
+                let viewportHeight = window.innerHeight;
+                let sectionHeight = section.offsetHeight;
+                
+                if (rect.top < viewportHeight && rect.bottom > 0) {
+                    let scrollProgress = Math.min(100, ((viewportHeight - rect.top) / sectionHeight) * 100);
+                    progressLine.style.width = `${scrollProgress}%`;
+                } else {
+                    progressLine.style.width = "0%";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

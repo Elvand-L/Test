@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Minimalist Website with Full-Screen Hover GIF</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation / Menu (Optional) -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="logo">HAVEN STUDIOS</div>
+      <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li class="dropdown">
+              <a href="#">Services</a>
+              <ul class="dropdown-menu">
+                  <li><a href="#">Web Design</a></li>
+                  <li><a href="#">Development</a></li>
+                  <li><a href="#">SEO</a></li>
+              </ul>
+          </li>
+          <li><a href="#">Contact</a></li>
+      </ul>
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+  </nav>
+
+  <!-- Fullscreen Mobile Menu -->
+  <div class="mobile-menu">
+      <div class="close-btn" onclick="toggleMenu()">✕</div>
+      <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li class="mobile-dropdown">
+              <a href="#">Services ▾</a>
+              <ul class="mobile-dropdown-menu">
+                  <li><a href="#">Web Design</a></li>
+                  <li><a href="#">Development</a></li>
+                  <li><a href="#">SEO</a></li>
+              </ul>
+          </li>
+          <li><a href="#">Contact</a></li>
+      </ul>
+  </div>
+  <script>
+      function toggleMenu() {
+          document.querySelector('.mobile-menu').classList.toggle('active');
+      }
+
+      document.querySelectorAll('.mobile-dropdown > a').forEach(item => {
+          item.addEventListener('click', function (e) {
+              e.preventDefault();
+              this.nextElementSibling.classList.toggle('show');
+          });
+      });
+
+      window.addEventListener('scroll', function() {
+          const navbar = document.querySelector('.navbar');
+          if (window.scrollY > 50) {
+              navbar.classList.add('scrolled');
+          } else {
+              navbar.classList.remove('scrolled');
+          }
+      });
+  </script>
+  </header>
+
+  <!-- Main Hero Section -->
+  <section class="hero" id="home">
+    <!-- A fallback background (dark or an image) -->
+    <div class="hero-bg"></div>
+
+    <!-- The large text titles -->
+    <div class="titles" style="margin-top: 12%;">
+      <h1 id="title1">500 Days<span>2024</span></h1>
+      <h1 id="title2">Spirited Away<span>2025</span></h1>
+      <h1 id="title3">The Brutalist<span>2024</span></h1>
+      <h1 id="title4">Warfare<span>2025</span></h1>
+      <h1 id="title5">Friendship<span>2024</span></h1>
+      <h1 id="title6">The Wind Rises<span>2025</span></h1>
+    </div>
+
+    <!-- Full-screen preview container -->
+    <div class="preview-container">
+      <!-- Default image (shown by default) -->
+      <img 
+        id="previewImage" 
+        src="Asset/500-Days-of-Summer-Cropped.jpg" 
+        alt="Preview" 
+      />
+      <!-- GIF (initially hidden by opacity) -->
+      <img 
+        id="previewGif" 
+        src="default-gif.gif" 
+        alt="GIF Preview"
+      />
+    </div>
+
+    <!-- Scroll-down arrow or cue -->
+    <div class="scroll-down" id="scrollDown">
+      &darr;
+    </div>
+  </section>
+
+  <!-- Main Section -->
+  <main style="margin-top: 5%;">
+    <section class="text-block reveal-on-scroll">
+      <h2><center>We are Haven Studios! </center><em><center>A film house with less boring and rigid style.</center></em></h2>
+      <p style="text-align: center;font-size: 300%;"><b>Bold</b>, <u>Unique</u> and <i>Different</i> are our <b><i><u style="color: red;">speciality.</u></i></b></p>
+    </section>
+
+    <section class="text-block reveal-on-scroll">
+      <p style="text-align: center;font-size: 150%;">
+        Over the past five years, We have worked with bloggers such as <strong>elinovsk</strong> 
+        and reputable companies like <strong>Moonly</strong>, 
+        <strong>Nike</strong>, and <strong>UNOde50</strong> in New York. 
+        Together, we have created original documentary films that have been 
+        recognised at many notable companies.
+      </p>
+    </section>
+  </main>
+
+  <body>
+    <div class="hidden-text" id="text-container"></div>
+
+    <div class="parallax parallax-1" style="margin-top: 5%;"></div>
+    <div class="parallax parallax-2"></div>
+  </body>
+
+  <body>
+    <div class="container-images">
+        <!-- Background Images (GIF Frames) -->
+        <div class="image-grid">
+            <img src="Asset/GIF for website/00aac956704997605f19455ab44f3c98.gif" class="image" style="top: 10%; left: 50%;" alt="Frame 1">
+            <img src="Asset/GIF for website/500 days of summer.gif" class="image" style="top: 100%; right: 10%;" alt="Frame 2">
+            <img src="Asset/GIF for website/Spirite.gif" class="image" style="top: 55%; left: 15%;" alt="Frame 3">
+            <img src="Asset/GIF for website/friendshipgif1.gif" class="image" style="top: 120%; right: 50%;" alt="Frame 4">
+        </div>
+        
+          <!-- Cinematic Text -->
+        <div class="text-overlay">
+            <h1 class="text-line"><span class="highlight">Movie</span> Production<br> and Film House <br> working in a <em>unique</em></h1>
+            <h1 class="text-line italic">cinematic style.</h1>
+            <h1 class="text-line">Our aim is to tell stories that <br> <em>evoke strong emotions</em> <br> and come from <br> <em>the heart.</em></h1>
+        </div>
+    </div>
+    
+<div class="content-awards">
+  <h2 style="font-size: 700%" class="text-block reveal-on-scroll">AWARDS</h2>
+  <div class="section">
+    <div class="year">2021</div>
+    <div class="description">National Cinematographic Award «NIKA» for 2021, Long list (2022, Russia, Moscow), «Freedom»</div>
+    <div class="line"></div>
+</div>
+  <div class="section">
+      <div class="year">2022</div>
+      <div class="description">Open call Beat Film Festival x Tochka Bank, short documentary movie, «50/50: Wind Rises»</div>
+      <div class="line"></div>
+  </div>
+  <div class="section">
+      <div class="year">2021</div>
+      <div class="description">National Cinematographic Award «NIKA» for 2021, Long list (2022, Russia, Moscow), «Freedom»</div>
+      <div class="line"></div>
+  </div>
+</div>
+<div class="laurel-container">
+  <div class="laurel-wrapper">
+      <img src="Asset/laurel_1a.png" class="laurel" width="200" style="height: 50%;">
+      <img src="Asset/laurel_1b.png" class="laurel" width="200" style="height: 50%;">
+      <img src="Asset/laurel_2a.png" class="laurel" width="200" style="height: 50%;">
+      <img src="Asset/laurel_2b.png" class="laurel" width="200" style="height: 50%;">
+      <img src="Asset/laurel_3.png" class="laurel" width="200">
+  </div>
+</div>
+
+<p style="font-size: 700%;text-align: left;margin-left: 3%;" class="text-block reveal-on-scroll"><b>OUR PARTNERS</b></p>
+<div class="logos">
+  <div class="logos-slide">
+    <img src="Asset/Logos/Bunny_poem.png" />
+    <img src="Asset/Logos/Fujifilm.png" />
+    <img src="Asset/Logos/WavesGems.png" />
+    <img src="Asset/Logos/Moscow_film_school.png" />
+    <img src="Asset/Logos/NesinTravel.png" />
+    <img src="Asset/Logos/Nike.png" />
+    <img src="Asset/Logos/photo.png"/>
+    <img src="Asset/Logos/photo2.png"/>
+    <img src="Asset/Logos/Sekta.png" />
+    <img src="Asset/Logos/Surf_trip_1.png" />
+    <img src="Asset/Logos/The_mato.png"/>
+    <img src="Asset/Logos/Unode50.png"/>
+    <img src="Asset/Logos/Your_Parallel.png"/>
+  </div>
+</div>
+
+<div class="text-block reveal-on-scroll" style="font-family: Arial, Helvetica, sans-serif;text-align: center;margin-top: 5%;">
+  <p style="font-size: 200%;"><b><u>Workflow</u></b></p>
+  <p style="font-size: 400%;font-style: italic;"><b><u>How is it created?</u></b></p>
+  <p style="font-size: 500%;"><b>1. PRE-PRODUCTION</b></p>
+  <p style="font-size: 500%;"><b>2. PRODUCTION</b></p>
+  <p style="font-size: 500%;"><b>3. POST-PRODUCTION</b></p>
+</div>
+
+<div class="Production-wrapper">
+  <div class="stage">
+    <div class="main-content">
+        <h2>Briefing, Research and Conceptualization</h2>
+        <p>Communication - my Client is my partner. I start by thoroughly researching your project, its goals, and target audience. Based on the gathered insights, I develop a unique concept and script that reflects your vision.</p>
+        <span class="progress-bar"></span>
+    </div>
+    <div class="right-column">
+        <p><i>Project Goals</i><br>
+        <i>Target Audience</i><br>
+        <i>Budget</i><br>
+        <i>Content Requirements</i><br>
+        <i>Trends</i><br>
+        <i>Visual concept — treatment</i><br>
+       <i>Script</i><br>
+       <i>Shooting plan</i></p>
+    </div>
+    <div class="corner-text">Pre — idea</div>
+  </div>
+
+  <div class="stage">
+    <div class="main-content">
+        <h2>Shooting and Creativity</h2>
+        <p>I meticulously prepare for shoots, ensuring high-quality video footage. I work on capturing compelling shots that engage viewers and convey your message effectively.</p>
+        <span class="progress-bar"></span>
+    </div>
+    <div class="right-column">
+        <p><i>Filming</i></p>
+    </div>
+    <div class="corner-text">Production — creation</div>
+  </div>
+
+  <div class="stage">
+    <div class="main-content">
+         <h2>Editing and Realization</h2>
+        <p>At this stage, I creatively piece together all elements to craft captivating videos. Special effects, editing, sound design — I do everything possible to make your video stand out and leave a lasting impression.</p>
+        <span class="progress-bar"></span>
+    </div>
+    <div class="right-column">
+        <p><i>Video and sound editing</i><br>
+        <i>Color correction and visual effects</i><br>
+        <i>Adding titles and graphics</i></p>
+    </div>
+    <div class="corner-text">Post — realization</div>
+  </div>
+</div>
+
+<div class="footer-card-wrapper" style="margin-top: 10%;">
+  <div class="contact-section hidden">
+    <div class="contact-details">
+       <small class="contact-heading">Contact</small>
+       <h1 class="contact-title">Let's create together!</h1>
+       <p class="contact-description">
+           Hello There!
+           <span class="italic">I am open to international work</span> 
+           and use my experience and skills in projects 
+            <span class="italic">around the world</span>.
+        </p>
+    </div>
+    <div class="contact-links">
+       <a href="mailto:elvandlie@gmail.com" class="contact-link"><span>elvandlie@gmail.com</span></a>
+       <a href="#" class="contact-link"><span>Instagram</span></a>
+        <a href="#" class="contact-link"><span>Vimeo</span></a>
+        <a href="#" class="contact-link"><span>YouTube</span></a>
+       <a href="#" class="contact-link"><span>Behance</span></a>
+    </div>
+  </div>
+  
+</div>
+<body>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Haven Studios. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
