@@ -1,80 +1,419 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scroll-behavior: smooth;">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Minimalist Website with Full-Screen Hover GIF</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Haven Studios - Film House</title>
+  <style>
+    /* --- CSS RESET & BASIC STYLES --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #fff;
+      background-color: #000;
+      overflow-x: hidden;
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 15px 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0, 0.3);
+      transition: all 0.3s ease-in-out;
+      z-index: 1000;
+    }
+    .navbar.scrolled {
+      background: rgba(10, 10, 10, 0.85);
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+    }
+    .nav-links li {
+      position: relative;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: white;
+      padding: 10px 20px;
+      transition: 0.3s;
+      display: block;
+    }
+    .nav-links a:hover {
+      color: #f39c12;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      background: rgba(34, 34, 34, 0.9);
+      top: 100%;
+      left: 0;
+      min-width: 180px;
+      box-shadow: 0 4px 8px rgba(0,0,0, 0.2);
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease-in-out;
+    }
+    .dropdown:hover .dropdown-menu {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .dropdown-menu li { width: 100%; }
+    .dropdown-menu a { padding: 12px; width: 100%; }
+    .hamburger { display: none; font-size: 24px; cursor: pointer; }
+
+    /* --- FULLSCREEN MOBILE MENU --- */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 100%;
+      width: 100%;
+      height: 100vh;
+      background: rgba(10, 10, 10, 0.98);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s ease-in-out;
+      z-index: 999;
+    }
+    .mobile-menu.active { left: 0; }
+    .mobile-menu .close-btn { position: absolute; top: 20px; right: 30px; font-size: 30px; cursor: pointer; }
+    .mobile-menu ul { list-style: none; text-align: center; }
+    .mobile-menu a { text-decoration: none; color: white; font-size: 24px; padding: 15px; display: block; transition: all 0.3s; }
+    .mobile-menu a:hover { color: #f39c12; transform: scale(1.1); }
+    .mobile-dropdown-menu { display: none; padding-left: 20px; }
+    .mobile-dropdown-menu.show { display: block; }
+    .mobile-dropdown > a { cursor: pointer; }
+
+    /* --- HERO SECTION --- */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 4rem 2rem;
+      overflow: hidden;
+    }
+    .titles {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 80%;
+    }
+    .titles h1 {
+      font-size: 3rem;
+      line-height: 1.1;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    .titles h1:hover {
+      transform: scale(1.05);
+      color: #ccc;
+    }
+    .titles h1 span {
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-left: 1rem;
+      opacity: 0.8;
+    }
+    .preview-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      background: #000;
+    }
+    #previewImage, #previewGif {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.5s ease;
+    }
+    #previewImage { opacity: 1; z-index: 2; }
+    #previewGif { opacity: 0; z-index: 1; }
+    .scroll-down {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      font-size: 2rem;
+      cursor: pointer;
+      animation: bounce 2s infinite;
+      z-index: 2;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(10px); }
+      60% { transform: translateY(5px); }
+    }
+
+    /* --- MAIN CONTENT & NEW ANIMATIONS --- */
+    main { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+    .text-block { margin-bottom: 3rem; line-height: 1.5; text-align: center; opacity: 0; } /* All start invisible */
+    .text-block h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+    .text-block em { font-style: italic; }
+    .text-block p { font-size: 1.2rem; }
+
+    /* Animation 1: Fade Up (Default) */
+    .reveal-fade-up { transition: opacity 1s ease-out, transform 1s ease-out; transform: translateY(40px); }
+    .reveal-fade-up.active { opacity: 1; transform: translateY(0); }
+    
+    /* Animation 2: Wipe Left */
+    .reveal-wipe-left { transition: opacity .8s ease-out, transform .8s cubic-bezier(0.25, 1, 0.5, 1); transform: translateX(50px); }
+    .reveal-wipe-left.active { opacity: 1; transform: translateX(0); }
+
+    /* Animation 3: Typewriter */
+    .typewriter-container { opacity: 0; transition: opacity 1s ease-out; }
+    .typewriter-container.active { opacity: 1; }
+    .reveal-typewriter {
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap; /* Essential for the typing effect */
+        border-right: .15em solid orange;
+        width: 0;
+        max-width: 100%;
+    }
+    .typewriter-container.active .reveal-typewriter {
+        animation: typing 3.5s steps(80, end) forwards, blink-caret .75s step-end infinite;
+        width: 100%;
+    }
+    .reveal-typewriter.finished {
+        white-space: normal; /* Allows wrapping after animation */
+        border-right: none;
+        animation: none;
+    }
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: orange; }
+    }
+    
+    .parallax { height: 100vh; background-attachment: fixed; background-size: cover; background-position: center; }
+    .parallax-1 { background-image: url('https://placehold.co/1920x1080/000000/ffffff?text=Parallax+1'); }
+    .parallax-2 { background-image: url('https://placehold.co/1920x1080/111111/eeeeee?text=Parallax+2'); }
+    
+    /* --- AWARDS --- */
+    .content-awards { width: 95%; margin: 5rem auto; }
+    .awards-title { font-size: 4rem; text-align: center; margin-bottom: 3rem; }
+    .section { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; position: relative; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .year { font-size: 24px; font-weight: bold; width: 15%; }
+    .description { font-size: 16px; width: 80%; text-align: right; }
+    .line { position: absolute; bottom: 0; left: 0; width: 0%; height: 1px; background-color: white; transition: width 1s ease-out .5s; }
+    .section.visible .line { width: 100%; }
+    
+    /* --- EDITORIAL SECTION --- */
+    .editorial-section {
+        width: 100%;
+        min-height: 100vh;
+        padding: 10vh 5vw;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .editorial-content {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+    }
+    .editorial-text {
+        font-size: clamp(2rem, 6vw, 4.5rem);
+        font-weight: bold;
+        line-height: 1.2;
+        text-align: left;
+    }
+    .editorial-images {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+    }
+    .editorial-image {
+        position: absolute;
+        border-radius: 12px;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+    .editorial-image.visible {
+        opacity: 0.8;
+        transform: translateY(0);
+    }
+    .editorial-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .editorial-image-1 { width: 300px; height: 200px; top: 15%; right: 10%; }
+    .editorial-image-2 { width: 250px; height: 350px; top: 50%; left: 5%; }
+    .editorial-image-3 { width: 350px; height: 220px; bottom: 10%; right: 20%; }
+
+    /* --- LAURELS & LOGOS --- */
+    .laurel-container { display: flex; justify-content: center; align-items: center; padding: 5rem 0; }
+    .laurel-wrapper { display: flex; gap: 20px; overflow: hidden; flex-wrap: wrap; justify-content: center; }
+    .laurel { opacity: 0; transform: translateY(50px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+    .laurel.show { opacity: 1; transform: translateY(0); }
+    
+    .logos { overflow: hidden; padding: 30px 0; background: rgb(0, 0, 0); white-space: nowrap; position: relative; }
+    .logos:before, .logos:after { position: absolute; top: 0; width: 150px; height: 100%; content: ""; z-index: 2; }
+    .logos:before { left: 0; background: linear-gradient(to left, rgba(0,0,0, 0), rgb(0,0,0)); }
+    .logos:after { right: 0; background: linear-gradient(to right, rgba(0,0,0, 0), rgb(0,0,0)); }
+    .logos:hover .logos-slide { animation-play-state: paused; }
+    .logos-slide { display: inline-block; animation: 35s slide infinite linear; }
+    .logos-slide img { height: 50px; margin: 0 20px; width: auto; filter: grayscale(1) brightness(1.5); }
+    @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
+    /* --- WORKFLOW (NEW) --- */
+    .Production-wrapper {
+        background-color: #0d0d2b; /* Dark blue background */
+    }
+    .stage {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 5rem 5vw;
+        position: relative;
+        overflow: hidden;
+    }
+    .stage-background-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(5rem, 20vw, 20rem);
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.05);
+        z-index: 1;
+        pointer-events: none;
+    }
+    .stage-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+    .main-content { max-width: 50%; }
+    .main-content h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: bold; }
+    .main-content p { font-size: clamp(1rem, 2vw, 1.2rem); margin-top: 1rem; color: #ccc; }
+    .right-column { font-family: 'Times New Roman', serif; font-size: clamp(1rem, 2vw, 1.5rem); font-style: italic; max-width: 40%; text-align: right; }
+    .corner-text { position: absolute; top: 0; right: 0; font-style: italic; font-size: 1.2rem; opacity: 0.8; }
+    
+    /* --- FOOTER CARD --- */
+    .footer-card-wrapper { background-color: black; color: white; display: flex; justify-content: center; align-items: center; padding: 5rem 2rem; margin-top: 5rem; }
+    .contact-section { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .contact-heading { font-size: 1.5rem; font-weight: bold; font-style: italic; }
+    .contact-title { font-size: 4rem; font-weight: bold; line-height: 1.1; cursor: pointer; transition: transform 0.3s ease-in-out; }
+    .contact-title:hover { transform: scale(1.05); }
+    .contact-description { font-size: 1.5rem; margin-top: 15px; max-width: 600px; }
+    .contact-links { text-align: right; font-size: 2rem; }
+    .contact-link { display: block; margin-top: 5px; color: white; text-decoration: none; transition: color 0.3s ease-in-out; }
+    .contact-link:hover { color: gray; }
+    .contact-link span { display: inline-block; transition: opacity 0.3s ease-in-out; }
+    
+    /* --- FOOTER --- */
+    .footer { text-align: center; padding: 1rem; background: #000; font-size: 0.9rem; opacity: 0.7; }
+
+    /* --- MOBILE RESPONSIVE STYLES --- */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .titles { max-width: 100%; padding: 0 15px; }
+      .titles h1 { font-size: 2rem; }
+      .parallax { background-attachment: scroll; height: 50vh; }
+      
+      .editorial-section { flex-direction: column; text-align: center; }
+      .editorial-text { text-align: center; }
+      .editorial-images { display: none; } /* Hide images on mobile */
+
+      .awards-title { font-size: 2.5rem; }
+      .content-awards .section { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .content-awards .year, .content-awards .description { width: 100%; text-align: left; }
+      .laurel { width: 120px; }
+      
+      .stage { flex-direction: column; text-align: center; gap: 2rem; }
+      .stage-content { flex-direction: column; gap: 2rem; }
+      .main-content, .right-column { max-width: 100%; text-align: center; }
+      .corner-text { position: static; margin-top: 20px; }
+
+      .contact-section { flex-direction: column; align-items: flex-start; gap: 30px; }
+      .contact-title { font-size: 2.5rem; }
+      .contact-description, .contact-heading { font-size: 1.2rem; }
+      .contact-links { text-align: left; }
+      .contact-link { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Navigation / Menu (Optional) -->
+  <!-- Navigation / Menu -->
   <header class="header">
     <nav class="navbar">
       <div class="logo">HAVEN STUDIOS</div>
       <ul class="nav-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li class="dropdown">
-              <a href="#">Services</a>
-              <ul class="dropdown-menu">
-                  <li><a href="#">Web Design</a></li>
-                  <li><a href="#">Development</a></li>
-                  <li><a href="#">SEO</a></li>
-              </ul>
-          </li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#workflow">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="hamburger" onclick="toggleMenu()">☰</div>
-  </nav>
-
-  <!-- Fullscreen Mobile Menu -->
-  <div class="mobile-menu">
+    </nav>
+    <div class="mobile-menu">
       <div class="close-btn" onclick="toggleMenu()">✕</div>
       <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li class="mobile-dropdown">
-              <a href="#">Services ▾</a>
-              <ul class="mobile-dropdown-menu">
-                  <li><a href="#">Web Design</a></li>
-                  <li><a href="#">Development</a></li>
-                  <li><a href="#">SEO</a></li>
-              </ul>
-          </li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="#home" onclick="toggleMenu()">Home</a></li>
+          <li><a href="#about" onclick="toggleMenu()">About</a></li>
+          <li><a href="#workflow" onclick="toggleMenu()">Services</a></li>
+          <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
       </ul>
-  </div>
-  <script>
-      function toggleMenu() {
-          document.querySelector('.mobile-menu').classList.toggle('active');
-      }
-
-      document.querySelectorAll('.mobile-dropdown > a').forEach(item => {
-          item.addEventListener('click', function (e) {
-              e.preventDefault();
-              this.nextElementSibling.classList.toggle('show');
-          });
-      });
-
-      window.addEventListener('scroll', function() {
-          const navbar = document.querySelector('.navbar');
-          if (window.scrollY > 50) {
-              navbar.classList.add('scrolled');
-          } else {
-              navbar.classList.remove('scrolled');
-          }
-      });
-  </script>
+    </div>
   </header>
 
   <!-- Main Hero Section -->
   <section class="hero" id="home">
-    <!-- A fallback background (dark or an image) -->
-    <div class="hero-bg"></div>
-
-    <!-- The large text titles -->
-    <div class="titles" style="margin-top: 12%;">
+    <div class="titles">
       <h1 id="title1">500 Days<span>2024</span></h1>
       <h1 id="title2">Spirited Away<span>2025</span></h1>
       <h1 id="title3">The Brutalist<span>2024</span></h1>
@@ -82,203 +421,278 @@
       <h1 id="title5">Friendship<span>2024</span></h1>
       <h1 id="title6">The Wind Rises<span>2025</span></h1>
     </div>
-
-    <!-- Full-screen preview container -->
     <div class="preview-container">
-      <!-- Default image (shown by default) -->
-      <img 
-        id="previewImage" 
-        src="Asset/500-Days-of-Summer-Cropped.jpg" 
-        alt="Preview" 
-      />
-      <!-- GIF (initially hidden by opacity) -->
-      <img 
-        id="previewGif" 
-        src="default-gif.gif" 
-        alt="GIF Preview"
-      />
+      <img id="previewImage" src="https://placehold.co/1920x1080/000/FFF?text=Haven+Studios" alt="Preview" />
+      <img id="previewGif" src="https://placehold.co/1920x1080/000/FFF?text=Loading+GIF..." alt="GIF Preview" />
     </div>
-
-    <!-- Scroll-down arrow or cue -->
-    <div class="scroll-down" id="scrollDown">
-      &darr;
-    </div>
+    <div class="scroll-down" id="scrollDown">&darr;</div>
   </section>
 
-  <!-- Main Section -->
-  <main style="margin-top: 5%;">
-    <section class="text-block reveal-on-scroll">
-      <h2><center>We are Haven Studios! </center><em><center>A film house with less boring and rigid style.</center></em></h2>
-      <p style="text-align: center;font-size: 300%;"><b>Bold</b>, <u>Unique</u> and <i>Different</i> are our <b><i><u style="color: red;">speciality.</u></i></b></p>
+  <!-- Main Content Section -->
+  <main id="about">
+    <section class="text-block reveal-fade-up">
+      <h2>We are Haven Studios!</h2>
+      <em class="reveal-fade-up" style="transition-delay: 200ms;">A film house with less boring and rigid style.</em>
     </section>
-
-    <section class="text-block reveal-on-scroll">
-      <p style="text-align: center;font-size: 150%;">
-        Over the past five years, We have worked with bloggers such as <strong>elinovsk</strong> 
-        and reputable companies like <strong>Moonly</strong>, 
-        <strong>Nike</strong>, and <strong>UNOde50</strong> in New York. 
-        Together, we have created original documentary films that have been 
-        recognised at many notable companies.
+    <section class="text-block reveal-wipe-left">
+      <p style="font-size: 1.8rem; margin-top: 1rem;"><b>Bold</b>, <u>Unique</u> and <i>Different</i> are our <b><i><u style="color: red;">speciality.</u></i></b></p>
+    </section>
+    <section class="text-block typewriter-container">
+      <p class="reveal-typewriter" style="font-size: 1.2rem; max-width: 600px; margin: auto;">
+        Over the past five years, we have worked with bloggers and reputable companies like Nike and UNOde50 in New York.
       </p>
     </section>
   </main>
 
-  <body>
-    <div class="hidden-text" id="text-container"></div>
+  <div class="parallax parallax-1"></div>
 
-    <div class="parallax parallax-1" style="margin-top: 5%;"></div>
-    <div class="parallax parallax-2"></div>
-  </body>
-
-  <body>
-    <div class="container-images">
-        <!-- Background Images (GIF Frames) -->
-        <div class="image-grid">
-            <img src="Asset/GIF for website/00aac956704997605f19455ab44f3c98.gif" class="image" style="top: 10%; left: 50%;" alt="Frame 1">
-            <img src="Asset/GIF for website/500 days of summer.gif" class="image" style="top: 100%; right: 10%;" alt="Frame 2">
-            <img src="Asset/GIF for website/Spirite.gif" class="image" style="top: 55%; left: 15%;" alt="Frame 3">
-            <img src="Asset/GIF for website/friendshipgif1.gif" class="image" style="top: 120%; right: 50%;" alt="Frame 4">
+  <!-- EDITORIAL SECTION -->
+  <section class="editorial-section">
+    <div class="editorial-images">
+        <div class="editorial-image editorial-image-1">
+            <img src="https://placehold.co/600x400/333/fff?text=Spirited+Away" alt="Cinematic Shot 1">
         </div>
-        
-          <!-- Cinematic Text -->
-        <div class="text-overlay">
-            <h1 class="text-line"><span class="highlight">Movie</span> Production<br> and Film House <br> working in a <em>unique</em></h1>
-            <h1 class="text-line italic">cinematic style.</h1>
-            <h1 class="text-line">Our aim is to tell stories that <br> <em>evoke strong emotions</em> <br> and come from <br> <em>the heart.</em></h1>
+        <div class="editorial-image editorial-image-2">
+            <img src="https://placehold.co/500x700/444/fff?text=500+Days" alt="Cinematic Shot 2">
+        </div>
+        <div class="editorial-image editorial-image-3">
+            <img src="https://placehold.co/700x440/555/fff?text=Friendship" alt="Cinematic Shot 3">
         </div>
     </div>
+    <div class="editorial-content">
+        <p class="editorial-text">
+            Our aim is to tell stories that <em>evoke strong emotions</em> and come from <em>the heart.</em>
+        </p>
+    </div>
+  </section>
     
-<div class="content-awards">
-  <h2 style="font-size: 700%" class="text-block reveal-on-scroll">AWARDS</h2>
-  <div class="section">
-    <div class="year">2021</div>
-    <div class="description">National Cinematographic Award «NIKA» for 2021, Long list (2022, Russia, Moscow), «Freedom»</div>
-    <div class="line"></div>
-</div>
-  <div class="section">
-      <div class="year">2022</div>
-      <div class="description">Open call Beat Film Festival x Tochka Bank, short documentary movie, «50/50: Wind Rises»</div>
-      <div class="line"></div>
-  </div>
-  <div class="section">
+  <div class="content-awards">
+    <h2 class="awards-title reveal-fade-up">AWARDS</h2>
+    <div class="section">
       <div class="year">2021</div>
       <div class="description">National Cinematographic Award «NIKA» for 2021, Long list (2022, Russia, Moscow), «Freedom»</div>
       <div class="line"></div>
-  </div>
-</div>
-<div class="laurel-container">
-  <div class="laurel-wrapper">
-      <img src="Asset/laurel_1a.png" class="laurel" width="200" style="height: 50%;">
-      <img src="Asset/laurel_1b.png" class="laurel" width="200" style="height: 50%;">
-      <img src="Asset/laurel_2a.png" class="laurel" width="200" style="height: 50%;">
-      <img src="Asset/laurel_2b.png" class="laurel" width="200" style="height: 50%;">
-      <img src="Asset/laurel_3.png" class="laurel" width="200">
-  </div>
-</div>
-
-<p style="font-size: 700%;text-align: left;margin-left: 3%;" class="text-block reveal-on-scroll"><b>OUR PARTNERS</b></p>
-<div class="logos">
-  <div class="logos-slide">
-    <img src="Asset/Logos/Bunny_poem.png" />
-    <img src="Asset/Logos/Fujifilm.png" />
-    <img src="Asset/Logos/WavesGems.png" />
-    <img src="Asset/Logos/Moscow_film_school.png" />
-    <img src="Asset/Logos/NesinTravel.png" />
-    <img src="Asset/Logos/Nike.png" />
-    <img src="Asset/Logos/photo.png"/>
-    <img src="Asset/Logos/photo2.png"/>
-    <img src="Asset/Logos/Sekta.png" />
-    <img src="Asset/Logos/Surf_trip_1.png" />
-    <img src="Asset/Logos/The_mato.png"/>
-    <img src="Asset/Logos/Unode50.png"/>
-    <img src="Asset/Logos/Your_Parallel.png"/>
-  </div>
-</div>
-
-<div class="text-block reveal-on-scroll" style="font-family: Arial, Helvetica, sans-serif;text-align: center;margin-top: 5%;">
-  <p style="font-size: 200%;"><b><u>Workflow</u></b></p>
-  <p style="font-size: 400%;font-style: italic;"><b><u>How is it created?</u></b></p>
-  <p style="font-size: 500%;"><b>1. PRE-PRODUCTION</b></p>
-  <p style="font-size: 500%;"><b>2. PRODUCTION</b></p>
-  <p style="font-size: 500%;"><b>3. POST-PRODUCTION</b></p>
-</div>
-
-<div class="Production-wrapper">
-  <div class="stage">
-    <div class="main-content">
-        <h2>Briefing, Research and Conceptualization</h2>
-        <p>Communication - my Client is my partner. I start by thoroughly researching your project, its goals, and target audience. Based on the gathered insights, I develop a unique concept and script that reflects your vision.</p>
-        <span class="progress-bar"></span>
     </div>
-    <div class="right-column">
-        <p><i>Project Goals</i><br>
-        <i>Target Audience</i><br>
-        <i>Budget</i><br>
-        <i>Content Requirements</i><br>
-        <i>Trends</i><br>
-        <i>Visual concept — treatment</i><br>
-       <i>Script</i><br>
-       <i>Shooting plan</i></p>
+    <div class="section">
+        <div class="year">2022</div>
+        <div class="description">Open call Beat Film Festival x Tochka Bank, short documentary movie, «50/50: Wind Rises»</div>
+        <div class="line"></div>
     </div>
-    <div class="corner-text">Pre — idea</div>
+    <div class="section">
+        <div class="year">2021</div>
+        <div class="description">National Cinematographic Award «NIKA» for 2021, Long list (2022, Russia, Moscow), «Freedom»</div>
+        <div class="line"></div>
+    </div>
   </div>
 
-  <div class="stage">
-    <div class="main-content">
-        <h2>Shooting and Creativity</h2>
-        <p>I meticulously prepare for shoots, ensuring high-quality video footage. I work on capturing compelling shots that engage viewers and convey your message effectively.</p>
-        <span class="progress-bar"></span>
+  <div class="laurel-container">
+    <div class="laurel-wrapper">
+        <img src="https://placehold.co/200x100/111/fff?text=Laurel+1" class="laurel" alt="Laurel 1">
+        <img src="https://placehold.co/200x100/222/fff?text=Laurel+2" class="laurel" alt="Laurel 2">
+        <img src="https://placehold.co/200x100/333/fff?text=Laurel+3" class="laurel" alt="Laurel 3">
+        <img src="https://placehold.co/200x100/444/fff?text=Laurel+4" class="laurel" alt="Laurel 4">
+        <img src="https://placehold.co/200x100/555/fff?text=Laurel+5" class="laurel" alt="Laurel 5">
     </div>
-    <div class="right-column">
-        <p><i>Filming</i></p>
-    </div>
-    <div class="corner-text">Production — creation</div>
   </div>
 
-  <div class="stage">
-    <div class="main-content">
-         <h2>Editing and Realization</h2>
-        <p>At this stage, I creatively piece together all elements to craft captivating videos. Special effects, editing, sound design — I do everything possible to make your video stand out and leave a lasting impression.</p>
-        <span class="progress-bar"></span>
-    </div>
-    <div class="right-column">
-        <p><i>Video and sound editing</i><br>
-        <i>Color correction and visual effects</i><br>
-        <i>Adding titles and graphics</i></p>
-    </div>
-    <div class="corner-text">Post — realization</div>
-  </div>
-</div>
+  <div class="parallax parallax-2"></div>
 
-<div class="footer-card-wrapper" style="margin-top: 10%;">
-  <div class="contact-section hidden">
-    <div class="contact-details">
-       <small class="contact-heading">Contact</small>
-       <h1 class="contact-title">Let's create together!</h1>
-       <p class="contact-description">
-           Hello There!
-           <span class="italic">I am open to international work</span> 
-           and use my experience and skills in projects 
-            <span class="italic">around the world</span>.
-        </p>
+  <div id="workflow">
+    <main>
+        <section class="text-block reveal-fade-up" style="margin-top: 5rem;">
+        <p style="font-size: 1.5rem;"><b><u>Workflow</u></b></p>
+        <p style="font-size: 2.5rem;font-style: italic;"><b><u>How is it created?</u></b></p>
+        </section>
+    </main>
+  </div>
+
+  <!-- NEW WORKFLOW SECTION -->
+  <div class="Production-wrapper">
+    <div class="stage">
+      <div class="stage-background-text">IDEA</div>
+      <div class="stage-content reveal-fade-up">
+        <div class="main-content">
+            <h2>1. Pre-Production</h2>
+            <p>Communication - my Client is my partner. I start by thoroughly researching your project, its goals, and target audience. Based on the gathered insights, I develop a unique concept and script that reflects your vision.</p>
+        </div>
+        <div class="right-column">
+            <p><i>Project Goals</i><br><i>Target Audience</i><br><i>Budget</i><br><i>Content Requirements</i><br><i>Visual concept — treatment</i><br><i>Script & Shooting plan</i></p>
+        </div>
+        <div class="corner-text">Pre — idea</div>
+      </div>
     </div>
-    <div class="contact-links">
-       <a href="mailto:elvandlie@gmail.com" class="contact-link"><span>elvandlie@gmail.com</span></a>
-       <a href="#" class="contact-link"><span>Instagram</span></a>
-        <a href="#" class="contact-link"><span>Vimeo</span></a>
-        <a href="#" class="contact-link"><span>YouTube</span></a>
-       <a href="#" class="contact-link"><span>Behance</span></a>
+    <div class="stage">
+      <div class="stage-background-text">WORKFLOW</div>
+      <div class="stage-content reveal-fade-up">
+        <div class="main-content">
+            <h2>2. Production</h2>
+            <p>I meticulously prepare for shoots, ensuring high-quality video footage. I work on capturing compelling shots that engage viewers and convey your message effectively.</p>
+        </div>
+        <div class="right-column"><p><i>Filming</i></p></div>
+        <div class="corner-text">Production — creation</div>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-background-text">FINISH</div>
+      <div class="stage-content reveal-fade-up">
+        <div class="main-content">
+           <h2>3. Post-Production</h2>
+          <p>At this stage, I creatively piece together all elements to craft captivating videos. Special effects, editing, sound design — I do everything possible to make your video stand out and leave a lasting impression.</p>
+        </div>
+        <div class="right-column">
+            <p><i>Video and sound editing</i><br><i>Color correction & VFX</i><br><i>Adding titles and graphics</i></p>
+        </div>
+        <div class="corner-text">Post — realization</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-card-wrapper" id="contact">
+    <div class="contact-section reveal-fade-up">
+      <div class="contact-details">
+         <small class="contact-heading">Contact</small>
+         <h1 class="contact-title">Let's create together!</h1>
+         <p class="contact-description">Even though I live in Amsterdam, <span class="italic">I am open to international work</span> and use my experience and skills in projects <span class="italic">around the world</span>.</p>
+      </div>
+      <div class="contact-links">
+         <a href="mailto:elvandlie@gmail.com" class="contact-link"><span>elvandlie@gmail.com</span></a>
+         <a href="#" class="contact-link"><span>Instagram</span></a>
+          <a href="#" class="contact-link"><span>Vimeo</span></a>
+          <a href="#" class="contact-link"><span>YouTube</span></a>
+         <a href="#" class="contact-link"><span>Behance</span></a>
+      </div>
     </div>
   </div>
   
-</div>
-<body>
-
-  <!-- Footer -->
   <footer class="footer">
     <p>&copy; 2025 Haven Studios. All rights reserved.</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    function toggleMenu() {
+        const menu = document.querySelector('.mobile-menu');
+        menu.classList.toggle('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Mobile dropdown menu
+        document.querySelectorAll('.mobile-dropdown > a').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                this.nextElementSibling.classList.toggle('show');
+            });
+        });
+
+        // Scrolled navbar style
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Hero section GIF swapping
+        const previewImage = document.getElementById('previewImage');
+        const previewGif = document.getElementById('previewGif');
+        const titles = Array.from({length: 6}, (_, i) => document.getElementById(`title${i + 1}`));
+        const gifs = [
+            'https://placehold.co/1920x1080/333/fff.gif?text=500+Days', 'https://placehold.co/1920x1080/444/fff.gif?text=Spirited+Away',
+            'https://placehold.co/1920x1080/555/fff.gif?text=The+Brutalist', 'https://placehold.co/1920x1080/666/fff.gif?text=Warfare',
+            'https://placehold.co/1920x1080/777/fff.gif?text=Friendship', 'https://placehold.co/1920x1080/888/fff.gif?text=The+Wind+Rises',
+        ];
+        const images = [
+            'https://placehold.co/1920x1080/333/fff?text=500+Days', 'https://placehold.co/1920x1080/444/fff.gif?text=Spirited+Away',
+            'https://placehold.co/1920x1080/555/fff?text=The+Brutalist', 'https://placehold.co/1920x1080/666/fff?text=Warfare',
+            'https://placehold.co/1920x1080/777/fff?text=Friendship', 'https://placehold.co/1920x1080/888/fff?text=The+Wind+Rises',
+        ];
+
+        let currentIndex = 0;
+        let userInteracting = false;
+        let cycleInterval = setInterval(cycleFilms, 5000);
+
+        function showGif(index) {
+            if (gifs[index]) {
+                previewGif.src = gifs[index];
+                previewGif.style.opacity = 1;
+                previewImage.style.opacity = 0;
+            }
+        }
+        function showImage(index) {
+             if (images[index]) {
+                previewImage.src = images[index];
+                previewImage.style.opacity = 1;
+                previewGif.style.opacity = 0;
+            }
+        }
+        function cycleFilms() {
+            if (!userInteracting) {
+                showGif(currentIndex);
+                setTimeout(() => showImage(currentIndex), 4000);
+                currentIndex = (currentIndex + 1) % titles.length;
+            }
+        }
+
+        titles.forEach((title, index) => {
+            if(title) {
+                title.addEventListener('mouseenter', () => {
+                    userInteracting = true;
+                    clearInterval(cycleInterval);
+                    showGif(index);
+                });
+                title.addEventListener('mouseleave', () => {
+                    userInteracting = false;
+                    showImage(index);
+                    clearInterval(cycleInterval);
+                    cycleInterval = setInterval(cycleFilms, 5000);
+                });
+            }
+        });
+
+        // Generic reveal on scroll observer
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if (entry.target.classList.contains('section')) {
+                        entry.target.classList.add('visible');
+                    }
+                     if (entry.target.classList.contains('editorial-image')) {
+                        entry.target.classList.add('visible');
+                    }
+                    if (entry.target.classList.contains('typewriter-container')) {
+                        const typewriterEl = entry.target.querySelector('.reveal-typewriter');
+                        setTimeout(() => {
+                            typewriterEl.classList.add('finished');
+                        }, 3500); // Match animation duration
+                    }
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.reveal-fade-up, .reveal-wipe-left, .typewriter-container, .text-line, .section, .editorial-image').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Staggered animation for laurels
+        const laurelWrapper = document.querySelector('.laurel-wrapper');
+        if(laurelWrapper) {
+            const laurelObserver = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting) {
+                    const laurels = laurelWrapper.querySelectorAll('.laurel');
+                    laurels.forEach((laurel, index) => {
+                        setTimeout(() => {
+                            laurel.classList.add('show');
+                        }, index * 150);
+                    });
+                    laurelObserver.unobserve(laurelWrapper);
+                }
+            }, { threshold: 0.1 });
+            laurelObserver.observe(laurelWrapper);
+        }
+    });
+  </script>
 </body>
 </html>
